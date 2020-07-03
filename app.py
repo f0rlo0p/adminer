@@ -10,7 +10,7 @@ black_list = [''] # add your blacklist here
 def index():
   r = request.args.get('file','')
   if r not in black_list:
-    return cmd(f'cat {r}')
+    return command(f'cat {r}')
   else:
     return abort(403)
 def command(cmd):
