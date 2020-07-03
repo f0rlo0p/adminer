@@ -3,7 +3,7 @@ from flask import Flask,request,abort
 import subprocess
 app = Flask(__name__)
 parameter = '' # your parameter . for example : file
-# localhost/?file=hi.txt
+# localhost/?data=hi.txt
 black_list = 'example.txt' # add your blacklist here
 # for example | dangerous file | /etc/passwd 
 
