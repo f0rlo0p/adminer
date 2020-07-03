@@ -8,5 +8,3 @@ for read files
 `python3 app.py`
 
 for open your files
-
-http://localhost/?file=hi.txt
