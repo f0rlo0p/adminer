@@ -3,7 +3,7 @@ from flask import Flask,request,abort
 import subprocess
 app = Flask(__name__)
 
-black_list = ['flag.txt'] # add your blacklist here
+black_list = ['example.txt'] # add your blacklist here
 # for example | dangerous file | /etc/passwd 
 
 @app.errorhandler(404)
