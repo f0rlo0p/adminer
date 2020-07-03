@@ -4,7 +4,7 @@ import subprocess
 app = Flask(__name__)
 parameter = '' # your parameter . for example : file
 # localhost/?file=hi.txt
-black_list = ['example.txt'] # add your blacklist here
+black_list = 'example.txt' # add your blacklist here
 # for example | dangerous file | /etc/passwd 
 
 @app.errorhandler(404)
@@ -13,10 +13,7 @@ def show_404(e):
 @app.route('/')
 def index():
   r = request.args.get(parameter,'')
-  if r not in black_list:
-    return command(f'cat {r}').decode()
-  else:
-    return abort(403)
+  return command(f'cat {r.replace(black_list,"")}').decode()
 def command(cmd):
         proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         (out, err) = proc.communicate()
