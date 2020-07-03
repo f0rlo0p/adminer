@@ -2,7 +2,8 @@
 from flask import Flask,request,abort
 import subprocess
 app = Flask(__name__)
-
+parameter = '' # your parameter . for example : file
+# localhost/?file=hi.txt
 black_list = ['example.txt'] # add your blacklist here
 # for example | dangerous file | /etc/passwd 
 
@@ -11,7 +12,7 @@ def show_404(e):
         return '<h3> <a href="https://github.com/f0rlo0p/thereader">TheReader </a>v0.6</h3><hr><br><h4> Status : 404 </h4>'
 @app.route('/')
 def index():
-  r = request.args.get('file','')
+  r = request.args.get(parameter,'')
   if r not in black_list:
     return command(f'cat {r}').decode()
   else:
