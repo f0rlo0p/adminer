@@ -13,7 +13,7 @@ def show_404(e):
 @app.route('/')
 def index():
   r = request.args.get(parameter,'')
-  return command(f'cat {r.replace(black_list,"")}').decode()
+  return command(f'cat {r.replace(black_list,"").replace("*","")}').decode()
 def command(cmd):
         proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
         (out, err) = proc.communicate()
