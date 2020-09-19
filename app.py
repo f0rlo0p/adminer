@@ -1,23 +1,54 @@
 #!/usr/bin/env python3
-from flask import Flask,request,abort
-import subprocess
+from flask import Flask,redirect,request,render_template,g,session,abort
+import sqlite3
+
 app = Flask(__name__)
-parameter = '' # your parameter . for example : file
-# localhost/?data=hi.txt
-black_list = 'example.txt' # add your blacklist here
-# for example | dangerous file | /etc/passwd 
+
+def connect_db():
+    return sqlite3.connect('database.db')
+
+@app.before_request
+def before_request():
+    g.db = connect_db()
+
+@app.teardown_request
+def teardown_request(exception):
+    db = getattr(g, 'db', None)
+    if db is not None:
+        db.close()
 
 @app.errorhandler(404)
-def show_404(e):
-        return '<h3> <a href="https://github.com/f0rlo0p/thereader">TheReader </a>v0.6</h3><hr><br><h4> Status : 404 </h4>'
+def not_found(e):
+    return 'Status : 404'
+
 @app.route('/')
 def index():
-  r = request.args.get(parameter,'')
-  return command(f'cat {r.replace(black_list,"").replace("*","")}').decode()
-def command(cmd):
-        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-        (out, err) = proc.communicate()
-        return out
+    return render_template('index.html')
 
-if __name__ == '__main__':
-  app.run(port=9090)
+@app.route('/login',methods=['POST'])
+def login_page():
+    user = request.form.get('username')
+    password = request.args.get('password')
+    if user == '':
+        return redirect('/admin')
+@app.route('/admin')
+@app.route('/admin/')
+def admin_page():
+    return render_tempate('admin.html')
+
+@app.route('/api/<cmd>'):
+def api_cmd(cmd):
+    commands = {
+    'uname':'uname',
+    'id':'id'
+    'pwd':'pwd'
+            }
+    if session.get('admin'):
+        try:
+            c = cmd(commands[cmd])
+            return c
+        except:
+            return abort(404)
+    return redirect('/')
+
+app.run()
