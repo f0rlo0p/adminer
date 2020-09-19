@@ -57,17 +57,20 @@ def api_cmd(cmd):
     #return redirect('/')
 # for testing
 token = generate(30)
-@app.route('/api/read/<name>')
-def readforme(name):
-    blacklist = 'YOUR_FILE.txt'
+
+@app.route('/api/read/')
+def readforme():
+    name = request.args.get('name',None)
+    if name == None:
+        return ''
     t = request.headers.get('Token',None)
     if t:
         if token == t:
             pass
     else:
         return abort(403)
-    blacklist = 'yourfile.txt'
-    if name in blacklist:
+    blacklist = 'YOUR_FILE.txt'
+    if name == blacklist:
         return abort(404)
     if len(name) < 8:
         return abort(403)
