@@ -52,13 +52,13 @@ def api_cmd(cmd):
             return abort(404)
     return redirect('/')
 # for testing
-# token = '558a077d09b78580ac5209c5ae5270b99c8f11eae73b353db266afc5d317' (admin)
+token = '558a077d09b78580ac5209c5ae5270b99c8f11eae73b353db266afc5d317'
 @app.route('/api/exec/<cmd>')
 def add_cmd(cmd):
-    token = request.headers.get('Token',None)
-    if token:
-        if token == '558a077d09b78580ac5209c5ae5270b99c8f11eae73b353db266afc5d317':
+    t = request.headers.get('Token',None)
+    if t:
+        if t == '558a077d09b78580ac5209c5ae5270b99c8f11eae73b353db266afc5d317':
             return CMD(cmd)
-
-
-app.run()
+    return abort(403)
+if __name__ == '__main__':
+    app.run()
