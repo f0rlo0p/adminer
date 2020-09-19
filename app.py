@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
-from flask import Flask,redirect,request,render_template,g,session,abort
+from flask import Flask,redirect,request,render_template,g,session,jsonify,abort
 from libs import cmd as CMD
+from core.tokengen import generate
+import core.request
+import core.reader
 import sqlite3
 
 app = Flask(__name__)
@@ -29,9 +32,10 @@ def index():
 @app.route('/login',methods=['POST'])
 def login_page():
     user = request.form.get('username')
-    password = request.args.get('password')
-    if user == 'admin' and password =='38b060a751ac9231ffq32':
+    password = request.form.get('password')
+    if user == '80093ee2532' and password =='7d1271539e9590de3e57b416c5a4a97':
         return redirect('/admin')
+    return redirect('/login')
 @app.route('/admin')
 @app.route('/admin/')
 def admin_page():
@@ -44,21 +48,20 @@ def api_cmd(cmd):
     'id':'id',
     'pwd':'pwd'
             }
-    if session.get('admin'):
-        try:
-            c = CMD(commands[cmd])
-            return c
-        except:
-            return abort(404)
-    return redirect('/')
+    try:
+        c = CMD(commands[cmd])
+        return c
+    except:
+        return abort(404)
+    #return redirect('/')
 # for testing
-token = '558a077d09b78580ac5209c5ae5270b99c8f11eae73b353db266afc5d317'
+token = generate(30)
 @app.route('/api/exec/<cmd>')
 def add_cmd(cmd):
     t = request.headers.get('Token',None)
     if t:
-        if t == '558a077d09b78580ac5209c5ae5270b99c8f11eae73b353db266afc5d317':
-            return CMD(cmd)
+        if t == token:
+            return jsonify({'output':CMD(cmd)})
     return abort(403)
 if __name__ == '__main__':
     app.run()
