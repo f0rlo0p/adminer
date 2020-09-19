@@ -23,7 +23,7 @@ def teardown_request(exception):
 
 @app.errorhandler(404)
 def not_found(e):
-    return 'Status : 404'
+    return 'Status : 404 <hr><a href="https://github.com/f0rlo0p/threader">threader v0.6</a>'
 
 @app.route('/')
 def index():
