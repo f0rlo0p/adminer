@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 from flask import Flask,redirect,request,render_template,g,session,abort
+from libs import cmd
 import sqlite3
 
 app = Flask(__name__)
@@ -29,7 +30,7 @@ def index():
 def login_page():
     user = request.form.get('username')
     password = request.args.get('password')
-    if user == '':
+    if user == 'admin' and password ='38b060a751ac9231ffq32':
         return redirect('/admin')
 @app.route('/admin')
 @app.route('/admin/')
@@ -40,7 +41,7 @@ def admin_page():
 def api_cmd(cmd):
     commands = {
     'uname':'uname',
-    'id':'id'
+    'id':'id',
     'pwd':'pwd'
             }
     if session.get('admin'):
