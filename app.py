@@ -46,7 +46,8 @@ def api_cmd(cmd):
     commands = {
     'uname':'uname',
     'id':'id',
-    'pwd':'pwd'
+    'pwd':'pwd',
+    'ls':'ls'
             }
     try:
         c = CMD(commands[cmd])
@@ -56,12 +57,22 @@ def api_cmd(cmd):
     #return redirect('/')
 # for testing
 token = generate(30)
-@app.route('/api/exec/<cmd>')
-def add_cmd(cmd):
+@app.route('/api/read/<name>')
+def readforme(name):
+    blacklist = 'YOUR_FILE.txt'
     t = request.headers.get('Token',None)
     if t:
-        if t == token:
-            return jsonify({'output':CMD(cmd)})
-    return abort(403)
+        if token == t:
+            pass
+    else:
+        return abort(403)
+    blacklist = 'yourfile.txt'
+    if name in blacklist:
+        return abort(404)
+    if len(name) < 8:
+        return abort(403)
+    name = name.replace('"','').replace("'",'').replace(';','').replace('|','').replace('\n','').replace('&','').replace(' ','')
+    c = CMD(f'cat {name}')
+    return jsonify({'OUTPUT':c})
 if __name__ == '__main__':
     app.run()
